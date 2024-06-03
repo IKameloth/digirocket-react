@@ -1,38 +1,53 @@
 import { Menu, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { PRODUCT_CATEGORIES } from "src/constants";
 import Cart from "../Cart";
+import { useOnClickOutside } from "src/hooks/useOnClickOutside";
 
 const MobileNav = () => {
   const user = null;
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const menuRef = useRef<HTMLDivElement | null>(null);
+  const [showSidebar, setShowSidebar] = useState<boolean>(false);
+  useOnClickOutside(menuRef, () => setShowSidebar(false));
 
   useEffect(() => {
-    if (isOpen) {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setShowSidebar(false);
+      }
+    };
+
+    if (showSidebar) {
       document.body.classList.add("overflow-hidden");
     } else {
       document.body.classList.remove("overflow-hidden");
     }
-  }, [isOpen]);
 
-  if (!isOpen)
-    return (
-      <button
-        type="button"
-        onClick={() => {
-          setIsOpen(true);
-        }}
-        className="lg:hidden relative -m-2 inline-flex items-center justify-center rounded-md p-2 text-gray-400"
-      >
-        <Menu className="h-6 w-6" aria-hidden="true" />
-      </button>
-    );
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [showSidebar]);
 
   return (
-    <div className="lg:hidden z-20 fixed top-0 left-0 right-0 h-[60px] flex [&>*]:my-auto px-2">
+    <>
+      {!showSidebar && (
+        <button
+          type="button"
+          onClick={() => {
+            setShowSidebar(true);
+          }}
+          className="lg:hidden relative -m-2 inline-flex items-center justify-center rounded-md p-2 text-gray-400"
+        >
+          <Menu className="h-6 w-6 animate-slide-in-left" aria-hidden="true" />
+        </button>
+      )}
+
       <div
-        className={`fixed overflow-y-scroll overscroll-y-none inset-0 z-40 flex ${
-          isOpen && "ease-in-out duration-300 animate-slide-in-left"
+        ref={menuRef}
+        className={`lg:hidden fixed inset-0 z-40 w-[380px] flex ease-in-out duration-300 ${
+          showSidebar ? "-translate-x-0" : "-translate-x-full"
         }`}
       >
         <div className="relative flex w-full max-w-sm flex-col overflow-y-auto bg-white pb-12 shadow-xl">
@@ -40,7 +55,7 @@ const MobileNav = () => {
           <div className="flex px-4 pb-2 pt-5">
             <button
               type="button"
-              onClick={() => setIsOpen(false)}
+              onClick={() => setShowSidebar(false)}
               className="relative -m-2 inline-flex items-center justify-center rounded-md p-2 text-gray-400"
             >
               <X className="h-6 w-6" aria-hidden="true" />
@@ -128,7 +143,7 @@ const MobileNav = () => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

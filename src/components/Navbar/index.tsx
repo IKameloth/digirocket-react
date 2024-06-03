@@ -9,13 +9,13 @@ const Navbar = () => {
   const user = null;
 
   return (
-    <div className="bg-white sticky z-50 top-0 inset-x-0 h-16 animate-fade-in-up">
+    <div className="bg-white sticky z-50 top-0 inset-x-0 h-16">
       <header className="relative bg-white">
         <div className="mx-auto w-full max-w-screen-xl px-2.5 md:px-20">
           <div className="border-b border-gray-200">
             <div className="flex h-16 items-center">
               <MobileNav />
-              <div className="ml-4 lg:ml-0 animate-fade-in-out">
+              <div className="ml-4 lg:ml-0 animate-slide-in-left">
                 <a href="/">
                   <Icons.rocketLogoNavigation className="h-8 w-auto" />
                 </a>
@@ -24,8 +24,8 @@ const Navbar = () => {
                 <NavItems />
               </div>
 
-              <div className="ml-auto flex items-center animate-fade-in-down">
-                <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
+              <div className="ml-auto flex items-center">
+                <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6 animate-fade-in-down">
                   {user ? null : (
                     <a
                       href="/sign-in"
@@ -65,9 +65,9 @@ const Navbar = () => {
                     </div>
                   )}
                 </div>
-                <div className="ml-4 mr-2 flow-root lg:ml-6 lg:mr-0">
-                  <Cart />
-                </div>
+              </div>
+              <div className="ml-4 mr-2 flow-root lg:ml-6 lg:mr-0 animate-slide-in-right">
+                <Cart />
               </div>
             </div>
           </div>

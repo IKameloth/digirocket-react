@@ -24,17 +24,14 @@ const NavItems = () => {
     <div className="flex gap-4 h-full" ref={navRef}>
       {PRODUCT_CATEGORIES.map((category, index) => {
         const handleToggle = () => {
-          if (activeIndex === 1) {
-            setActiveIndex(null);
-          } else {
-            setActiveIndex(index);
-          }
+          if (activeIndex === index) return setActiveIndex(null);
+          setActiveIndex(index);
         };
 
         const isOpen = index === activeIndex;
 
         return (
-          <div key={category.value} className="flex animate">
+          <div key={category.value} className="flex">
             <div className="relative flex items-center">
               <Button
                 className="gap-1.5"
