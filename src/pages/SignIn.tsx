@@ -1,6 +1,6 @@
 import { Label } from "src/components/ui/label";
 import { ArrowRight } from "lucide-react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { Icons } from "src/components/Icons";
 import { Button, buttonVariants } from "src/components/ui/button";
 import { Input } from "src/components/ui/input";
@@ -13,15 +13,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "src/lib/utils";
 
 const SignIn = () => {
-  const isSeller = useParams();
-  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const paramValue = searchParams.get("as");
+  const isSeller = paramValue === "seller";
 
   const continueAsSeller = () => {
-    // navigate.set("?as=seller");
+    setSearchParams("?as=seller");
   };
 
   const continueAsBuyer = () => {
-    navigate("/sign-in");
+    setSearchParams("");
   };
 
   const {
