@@ -1,24 +1,36 @@
-import reactLogo from "./assets/react.svg";
+import { useEffect } from "react";
+import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
-import viteLogo from "/vite.svg";
+import Home from "./components/Home";
 
 function App() {
+  useEffect(() => {
+    document.body.classList.add(
+      "relative",
+      "h-full",
+      "font-sans",
+      "antialiased"
+    );
+
+    return () => {
+      document.body.classList.remove(
+        "relative",
+        "h-full",
+        "font-sans",
+        "antialiased"
+      );
+    };
+  }, []);
+
   return (
     <>
-      <Navbar />
-      <div>
-        <h1 className="underline font-bold text-blue-900">Tailwind init</h1>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <main className="relative flex flex-col main-h-screen">
+        <Navbar />
+        <div className="flex-grow flex-1">
+          <Home />
+        </div>
+        <Footer />
+      </main>
     </>
   );
 }
