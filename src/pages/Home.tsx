@@ -1,6 +1,6 @@
 import { ArrowDownToLine, CheckCircle, Leaf } from "lucide-react";
-import ProductReel from "../Product/ProductReel";
-import { Button, buttonVariants } from "../ui/button";
+import ProductReel from "src/components/Product/ProductReel";
+import { Button, buttonVariants } from "src/components/ui/button";
 
 const Home = () => {
   const perks = [

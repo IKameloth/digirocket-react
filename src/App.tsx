@@ -1,38 +1,34 @@
-import { useEffect } from "react";
-import Footer from "./components/Footer";
+import { Routes, Route } from "react-router-dom";
+import NotFound from "./pages/NotFound";
+import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
+import PrivateRoute from "./services/privateRoute";
 import Navbar from "./components/Navbar";
-import Home from "./components/Home";
+import Footer from "./components/Footer";
+import Account from "./pages/Account";
+import Home from "./pages/Home";
 
-function App() {
-  useEffect(() => {
-    document.body.classList.add(
-      "relative",
-      "h-full",
-      "font-sans",
-      "antialiased"
-    );
-
-    return () => {
-      document.body.classList.remove(
-        "relative",
-        "h-full",
-        "font-sans",
-        "antialiased"
-      );
-    };
-  }, []);
-
+export default function App() {
   return (
     <>
-      <main className="relative flex flex-col main-h-screen">
+      <div className="flex flex-col min-h-screen">
         <Navbar />
-        <div className="flex-grow flex-1">
-          <Home />
-        </div>
+        <main className="flex-grow">
+          <Routes>
+            {/* Public routes */}
+            <Route path="/" element={<Home />} />
+            <Route path="/sign-in" element={<SignIn />} />
+            <Route path="/sign-up" element={<SignUp />} />
+            <Route path="*" element={<NotFound />} />
+
+            {/* Private routes */}
+            <Route path="/" element={<PrivateRoute />}>
+              <Route path="/account" element={<Account />} />
+            </Route>
+          </Routes>
+        </main>
         <Footer />
-      </main>
+      </div>
     </>
   );
 }
-
-export default App;
