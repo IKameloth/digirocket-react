@@ -7,6 +7,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Account from "./pages/Account";
 import Home from "./pages/Home";
+import VerifyEmailPage from "./pages/VerifyEmail";
 
 export default function App() {
   return (
@@ -19,6 +20,7 @@ export default function App() {
             <Route path="/" element={<Home />} />
             <Route path="/sign-in" element={<SignIn />} />
             <Route path="/sign-up" element={<SignUp />} />
+            <Route path="/verify-email/:token" element={<VerifyEmailPage />} />
             <Route path="*" element={<NotFound />} />
 
             {/* Private routes */}
