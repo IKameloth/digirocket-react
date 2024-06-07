@@ -11,8 +11,11 @@ import {
 } from "src/lib/validators/AccountCredentialValidator";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "src/lib/utils";
+import { useAuth } from "src/context/auth-context";
+import { useEffect } from "react";
 
 const SignIn = () => {
+  const { signIn, errors: responseError } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
   const paramValue = searchParams.get("as");
   const isSeller = paramValue === "seller";
@@ -34,8 +37,15 @@ const SignIn = () => {
   });
 
   const onSubmit = ({ email, password }: TAuthCredentialsValidator) => {
-    console.log({ email, password });
+    signIn(email, password);
   };
+
+  useEffect(() => {
+    if (responseError.length) {
+      // TODO: add alert or notice to show in screen
+      alert(responseError[0].message);
+    }
+  }, [responseError]);
 
   return (
     <div className="container relative flex flex-col pt-20 pb-20 items-center justify-center lg:px-0 animate-fade-in-up">

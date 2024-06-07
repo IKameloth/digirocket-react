@@ -1,4 +1,6 @@
+import { isAxiosError } from "axios";
 import React, { createContext, useContext, useReducer } from "react";
+import axiosInstance from "src/lib/axiosConfig";
 
 type User = {
   _id: string;
@@ -8,6 +10,8 @@ type User = {
   date: string;
 };
 
+type Error = Array<{ field: string | null; message: string }> | [];
+
 interface AuthContext extends AuthState {
   signIn: (email: string, password: string) => void;
   signOut: () => void;
@@ -16,13 +20,20 @@ interface AuthContext extends AuthState {
 type AuthState = {
   user: User | null;
   isAuthenticated: boolean;
+  errors: Error;
+  isLoading: boolean;
 };
 
-type AuthAction = { type: "SIGN_IN"; payload: User } | { type: "SIGN_OUT" };
+type AuthAction =
+  | { type: "SIGN_IN"; payload: User }
+  | { type: "SIGN_OUT" }
+  | { type: "SET_ERROR"; payload: Error };
 
 const initialState: AuthState = {
   user: null,
   isAuthenticated: false,
+  errors: [],
+  isLoading: false,
 };
 
 const AuthContext = createContext<AuthContext | null>(null);
@@ -34,12 +45,22 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
         ...state,
         user: action.payload,
         isAuthenticated: true,
+        isLoading: false,
+        errors: [],
       };
     case "SIGN_OUT":
       return {
         ...state,
         user: null,
         isAuthenticated: false,
+        isLoading: false,
+        errors: [],
+      };
+    case "SET_ERROR":
+      return {
+        ...state,
+        isLoading: false,
+        errors: action.payload,
       };
     default:
       return state;
@@ -49,20 +70,22 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
-  const signIn = (email: string, password: string) => {
-    // make axios call to api endpoint
-    console.log({ email, password });
+  const signIn = async (email: string, password: string) => {
+    try {
+      const response = await axiosInstance.post("/auth/login", {
+        email,
+        password,
+      });
 
-    // format the response from api service
-    const user = {
-      _id: "1",
-      username: "cmatteo",
-      email: "cmatteo@gmail.com",
-      password: "1234admin",
-      date: "ayer",
-    };
-    // run the dispatch and update the state
-    dispatch({ type: "SIGN_IN", payload: user });
+      const data = response.data;
+      console.log(data);
+      // dispatch({ type: "SIGN_IN", payload: user });
+    } catch (err) {
+      if (isAxiosError(err)) {
+        const dataError = err.response?.data.errors;
+        dispatch({ type: "SET_ERROR", payload: dataError });
+      }
+    }
   };
 
   const signOut = () => {
