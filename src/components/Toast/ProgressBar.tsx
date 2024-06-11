@@ -23,9 +23,9 @@ const ProgressBar = ({ duration }: { duration: number }) => {
   }, [duration]);
 
   return (
-    <div className="w-full bg-gray-300 h-4 rounded">
+    <div className="w-full bg-gray-300 h-1 rounded-t">
       <div
-        className="bg-blue-500 h-4 rounded"
+        className="bg-gray-500 h-1 rounded-t"
         style={{ width: `${progress}%`, transition: "width 0.1s linear" }}
       ></div>
     </div>

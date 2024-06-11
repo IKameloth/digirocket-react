@@ -89,9 +89,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       // dispatch({ type: "SIGN_IN", payload: user });
     } catch (err) {
       if (isAxiosError(err)) {
-        const dataError = err.response?.data.errors;
-        dispatch({ type: "SET_ERROR", payload: dataError });
+        err.code === "ERR_NETWORK";
+        switch (err.code) {
+          case "ERR_NETWORK":
+            return dispatch({
+              type: "SET_ERROR",
+              payload: [{ field: null, message: err.message }],
+            });
+          default:
+            dispatch({ type: "SET_ERROR", payload: err.response?.data.errors });
+        }
+      } else if (err instanceof Error) {
+        dispatch({
+          type: "SET_ERROR",
+          payload: [{ field: null, message: err.message }],
+        });
       }
+      console.log("error", err);
     }
   };
 
