@@ -23,3 +23,7 @@ export function formatPrice(
     maximumFractionDigits: 2,
   }).format(numericPrice);
 }
+
+export function Capitalize(message: string) {
+  return message.charAt(0).toUpperCase().concat(message.slice(1));
+}

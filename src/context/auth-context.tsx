@@ -15,6 +15,7 @@ type Error = Array<{ field: string | null; message: string }> | [];
 interface AuthContext extends AuthState {
   signIn: (email: string, password: string) => void;
   signOut: () => void;
+  cleanErrors: () => void;
 }
 
 type AuthState = {
@@ -27,7 +28,8 @@ type AuthState = {
 type AuthAction =
   | { type: "SIGN_IN"; payload: User }
   | { type: "SIGN_OUT" }
-  | { type: "SET_ERROR"; payload: Error };
+  | { type: "SET_ERROR"; payload: Error }
+  | { type: "CLEAN_ERROR" };
 
 const initialState: AuthState = {
   user: null,
@@ -62,6 +64,11 @@ const authReducer = (state: AuthState, action: AuthAction): AuthState => {
         isLoading: false,
         errors: action.payload,
       };
+    case "CLEAN_ERROR":
+      return {
+        ...state,
+        errors: [],
+      };
     default:
       return state;
   }
@@ -92,8 +99,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     dispatch({ type: "SIGN_OUT" });
   };
 
+  const cleanErrors = () => {
+    dispatch({ type: "CLEAN_ERROR" });
+  };
+
   return (
-    <AuthContext.Provider value={{ ...state, signIn, signOut }}>
+    <AuthContext.Provider value={{ ...state, signIn, signOut, cleanErrors }}>
       {children}
     </AuthContext.Provider>
   );

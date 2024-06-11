@@ -1,7 +1,15 @@
-import React from "react";
+import { useAuth } from "src/context/auth-context";
 
 const Account = () => {
-  return <div>Account</div>;
+  const { user } = useAuth();
+
+  return (
+    <ul>
+      <h1>userdata:</h1>
+      <li>{user?.username}</li>
+      <li>{user?.email}</li>
+    </ul>
+  );
 };
 
 export default Account;

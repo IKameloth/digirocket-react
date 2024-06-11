@@ -10,12 +10,14 @@ import {
   TAuthCredentialsValidator,
 } from "src/lib/validators/AccountCredentialValidator";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { cn } from "src/lib/utils";
 import { useAuth } from "src/context/auth-context";
 import { useEffect } from "react";
+import { cn } from "src/lib/utils";
+import { useToast } from "src/context/toast-context";
 
 const SignIn = () => {
-  const { signIn, errors: responseError } = useAuth();
+  const { addToast } = useToast();
+  const { signIn, errors: responseError, isLoading, cleanErrors } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
   const paramValue = searchParams.get("as");
   const isSeller = paramValue === "seller";
@@ -42,9 +44,16 @@ const SignIn = () => {
 
   useEffect(() => {
     if (responseError.length) {
-      // TODO: add alert or notice to show in screen
-      alert(responseError[0].message);
+      responseError.forEach((err) => {
+        addToast({
+          type: "error",
+          message: err.message,
+          // duration: 1000,
+        });
+      });
+      cleanErrors();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [responseError]);
 
   return (
@@ -122,7 +131,7 @@ const SignIn = () => {
             <Button
               onClick={continueAsBuyer}
               variant="secondary"
-              // disabled={isLoading}
+              disabled={isLoading}
             >
               Continue as customer
             </Button>
@@ -130,7 +139,7 @@ const SignIn = () => {
             <Button
               onClick={continueAsSeller}
               variant="secondary"
-              // disabled={isLoading}
+              disabled={isLoading}
             >
               Continue as seller
             </Button>
